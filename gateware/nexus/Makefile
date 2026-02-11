@@ -7,6 +7,7 @@ RTL_SRCS = $(addprefix rtl/, \
 	soc_bram.v \
 	sysmgr.v \
 	wb_epbuf.v \
+	wb_spi.v \
 	top.v \
 )
 USB_SRCS = $(addprefix no2usb-rtl/, \

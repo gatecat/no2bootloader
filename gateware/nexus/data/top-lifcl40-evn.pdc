@@ -52,3 +52,16 @@ ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {led[11]}]
 ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {led[12]}]
 ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {led[13]}]
 
+
+
+ldc_set_location -site {E12} [get_ports spi_clk]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {spi_clk}]
+
+ldc_set_location -site {D13} [get_ports spi_mosi]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {spi_mosi}]
+
+ldc_set_location -site {D15} [get_ports spi_miso]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {spi_miso}]
+
+ldc_set_location -site {E13} [get_ports spi_cs_n]
+ldc_set_port -iobuf {IO_TYPE=LVCMOS33} [get_ports {spi_cs_n}]

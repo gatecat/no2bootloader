@@ -13,41 +13,13 @@
 
 
 struct spi {
-	uint32_t _rsvd0[6];
-	uint32_t irq;		/* 0110 - SPIIRQ   - Interrupt Status Register  */
-	uint32_t irqen;		/* 0111 - SPIIRQEN - Interrupt Control Register */
-	uint32_t cr0;		/* 1000 - CR0      - Control Register 0 */
-	uint32_t cr1;		/* 1001 - CR1      - Control Register 1 */
-	uint32_t cr2;		/* 1010 - CR2      - Control Register 2 */
-	uint32_t br;		/* 1011 - BR       - Baud Rate Register */
-	uint32_t sr;		/* 1100 - SR       - Status Register    */
-	uint32_t txdr;		/* 1101 - TXDR     - Transmit Data Register */
-	uint32_t rxdr;		/* 1110 - RXDR     - Receive Data Register  */
-	uint32_t csr;		/* 1111 - CSR      - Chip Select Register   */
+	uint32_t config;
+	uint32_t divider;
+	uint32_t tx_data;
+	uint32_t rx_data;
+	uint32_t status;
+
 } __attribute__((packed,aligned(4)));
-
-#define SPI_CR0_TIDLE(xcnt)	(((xcnt) & 3) << 6)
-#define SPI_CR0_TTRAIL(xcnt)	(((xcnt) & 7) << 3)
-#define SPI_CR0_TLEAD(xcnt)	(((xcnt) & 7) << 0)
-
-#define SPI_CR1_ENABLE		(1 << 7)
-#define SPI_CR1_WKUPEN_USER	(1 << 6)
-#define SPI_CR1_TXEDGE		(1 << 4)
-
-#define SPI_CR2_MASTER		(1 << 7)
-#define SPI_CR2_MCSH		(1 << 6)
-#define SPI_CR2_SDBRE		(1 << 5)
-#define SPI_CR2_CPOL		(1 << 2)
-#define SPI_CR2_CPHA		(1 << 1)
-#define SPI_CR2_LSBF		(1 << 0)
-
-#define SPI_SR_TIP		(1 << 7)
-#define SPI_SR_BUSY		(1 << 6)
-#define SPI_SR_TRDY		(1 << 4)
-#define SPI_SR_RRDY		(1 << 3)
-#define SPI_SR_TOE		(1 << 2)
-#define SPI_SR_ROE		(1 << 1)
-#define SPI_SR_MDF		(1 << 0)
 
 
 static volatile struct spi * const spi_regs = (void*)(SPI_BASE);
@@ -56,13 +28,9 @@ static volatile struct spi * const spi_regs = (void*)(SPI_BASE);
 void
 spi_init(void)
 {
-	spi_regs->cr0 = SPI_CR0_TIDLE(3) |
-	                SPI_CR0_TTRAIL(7) |
-	                SPI_CR0_TLEAD(7);
-	spi_regs->cr1 = SPI_CR1_ENABLE;
-	spi_regs->cr2 = SPI_CR2_MASTER | SPI_CR2_MCSH;
-	spi_regs->br  = 3;
-	spi_regs->csr = 0xf;
+	spi_regs->config = 2;
+	spi_regs->divider = 2;
+
 }
 
 void
@@ -71,23 +39,22 @@ spi_xfer(unsigned cs, struct spi_xfer_chunk *xfer, unsigned n)
 	uint8_t rxd;
 
 	/* Setup CS */
-	spi_regs->csr = 0xf ^ (1 << cs);
+	spi_regs->config = 2 | 4;
 
 	/* Run the chunks */
 	while (n--) {
 		for (int i=0; i<xfer->len; i++)
 		{
-			spi_regs->txdr = xfer->write ? xfer->data[i] : 0x00;
-			while (!(spi_regs->sr & SPI_SR_RRDY));
-			rxd = spi_regs->rxdr;
+			spi_regs->tx_data = xfer->write ? xfer->data[i] : 0x00;
+			while (spi_regs->status & 1);
 			if (xfer->read)
-				xfer->data[i] = rxd;
+				xfer->data[i] = spi_regs->rx_data;
 		}
 		xfer++;
 	}
 
 	/* Clear CS */
-	spi_regs->csr = 0xf;
+	spi_regs->config = 2;
 }
 
 

@@ -165,7 +165,7 @@ void main()
 	// led_state(true);
 
 	/* SPI */
-	// spi_init();
+	spi_init();
 
 	/* Should be allow boot loader upgrad ? */
 	bl_upgrade = 0;
@@ -179,7 +179,7 @@ void main()
 	patch_descriptors(bl_upgrade);
 
 	/* Enable USB directly */
-	// serial_no_init();
+	serial_no_init();
 	usb_init(&dfu_stack_desc);
 	usb_dfu_init(dfu_zones, 4);
 	usb_msos20_init(NULL);

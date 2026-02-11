@@ -31,6 +31,12 @@ module top (
 	output wire usb_pu,
 
 
+	// SPI
+	output wire spi_clk,
+	output wire spi_cs_n,
+	output wire spi_mosi,
+	input wire spi_miso
+
 );
 
 	localparam WB_N  =  6;
@@ -282,12 +288,20 @@ module top (
 	);
 
 	// todo: SPI
-	reg spi_ack;
-	always @(posedge clk_24m)
-		spi_ack <= wb_cyc[2] & ~spi_ack;
-
-	assign wb_ack[2] = spi_ack;
-	assign wb_rdata[2] = 0;
+	wb_spi spi_i (
+		.spi_mosi (spi_mosi),
+		.spi_miso (spi_miso),
+		.spi_clk  (spi_clk),
+		.spi_csn  (spi_cs_n),
+		.wb_addr  (wb_addr[3:0]),
+		.wb_rdata (wb_rdata[2]),
+		.wb_wdata (wb_wdata),
+		.wb_we    (wb_we),
+		.wb_cyc   (wb_cyc[2]),
+		.wb_ack   (wb_ack[2]),
+		.clk      (clk_24m),
+		.rst      (rst)
+	);
 
 	reg rgb_ack;
 	always @(posedge clk_24m)
