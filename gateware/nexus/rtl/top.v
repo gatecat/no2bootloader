@@ -260,7 +260,7 @@ module top (
 		else
 			div48 <= div48 + 1'b1;
 
-	assign led[13:1] = ~{11'h1, div48[22], div[22]};
+	assign led[13:1] = ~{mem_addr[31], mem_addr[27:16]};
 
 	// UART [1]
 	// ----
@@ -281,6 +281,13 @@ module top (
 		.rst      (rst)
 	);
 
+	// todo: SPI
+	reg spi_ack;
+	always @(posedge clk_24m)
+		spi_ack <= wb_cyc[2] & ~spi_ack;
+
+	assign wb_ack[2] = spi_ack;
+	assign wb_rdata[2] = 0;
 
 	reg rgb_ack;
 	always @(posedge clk_24m)
