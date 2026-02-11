@@ -34,7 +34,7 @@ MISC_SRCS = $(addprefix ../cores/no2misc/rtl/, \
 	glitch_filter.v \
 )
 
-no2bootloader-nexus.json: $(RTL_SRCS) $(USB_SRCS) $(MISC_SRCS)
+no2bootloader-nexus.json: $(RTL_SRCS) $(USB_SRCS) $(MISC_SRCS) ../../firmware/no2bootloader-nexus.hex
 	yosys -p "synth_nexus -top top -json no2bootloader-nexus.json" $(RTL_SRCS) $(USB_SRCS) $(MISC_SRCS)
 
 no2bootloader-nexus.fasm: no2bootloader-nexus.json data/top-lifcl40-evn.pdc

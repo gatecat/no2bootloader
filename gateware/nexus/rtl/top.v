@@ -245,7 +245,22 @@ module top (
 	);
 
 	assign led[0] = ~led_i;
-	assign led[13:1] = ~{12'h0};
+
+	reg [22:0] div;
+	always @(posedge clk_24m)
+		if (rst)
+			div <= 0;
+		else
+			div <= div + 1'b1;
+
+	reg [22:0] div48;
+	always @(posedge clk_48m)
+		if (rst)
+			div48 <= 0;
+		else
+			div48 <= div48 + 1'b1;
+
+	assign led[13:1] = ~{11'h1, div48[22], div[22]};
 
 	// UART [1]
 	// ----

@@ -155,6 +155,8 @@ void main()
 	console_init();
 	puts("Booting DFU image..\n");
 
+	set_single_led(false);
+
 	/* LED */
 	// led_init();
 	// led_color(8, 8, 8);
