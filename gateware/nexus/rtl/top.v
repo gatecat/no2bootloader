@@ -15,7 +15,7 @@ module top (
 
 
 	// LED
-	output wire [15:0] led,
+	output wire [13:0] led,
 
 	// Debug UART
 	input  wire uart_rx,
@@ -23,6 +23,7 @@ module top (
 
 	// Clock
 	input  wire clk_in,
+	input  wire gsrn,
 
 	// USB
 	inout  wire usb_dp,
@@ -194,7 +195,7 @@ module top (
 	// Main memory
 	soc_bram #(
 		.AW(SPRAM_AW),
-		.INIT_FILE("../fw/firmware.hex")
+		.INIT_FILE("../../firmware/no2bootloader-nexus.hex")
 	) spram_I (
 		.addr  (spram_addr[SPRAM_AW-1:0]),
 		.rdata (spram_rdata),
@@ -244,7 +245,7 @@ module top (
 	);
 
 	assign led[0] = ~led_i;
-	assign led[15:1] = ~{14'h0};
+	assign led[13:1] = ~{12'h0};
 
 	// UART [1]
 	// ----
@@ -357,7 +358,7 @@ module top (
 
 	sysmgr sys_mgr_I (
 		.clk_in  (clk_in),
-		.rst_in  (1'b0),
+		.rst_in  (~gsrn),
 		.clk_48m (clk_48m),
 		.clk_24m (clk_24m),
 		.rst_out (rst)
