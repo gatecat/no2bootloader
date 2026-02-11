@@ -1,4 +1,4 @@
-BOARD ?= icebreaker
+BOARD ?= nexus
 CROSS ?= riscv-none-elf-
 CC = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy

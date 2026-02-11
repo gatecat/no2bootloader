@@ -156,28 +156,28 @@ void main()
 	puts("Booting DFU image..\n");
 
 	/* LED */
-	led_init();
-	led_color(8, 8, 8);
-	led_blink(true, 150, 150);
-	led_breathe(true, 50, 100);
-	led_state(true);
+	// led_init();
+	// led_color(8, 8, 8);
+	// led_blink(true, 150, 150);
+	// led_breathe(true, 50, 100);
+	// led_state(true);
 
 	/* SPI */
-	spi_init();
+	// spi_init();
 
 	/* Should be allow boot loader upgrad ? */
-	bl_upgrade = ((flash_read_sr(1) & 0x7c) == 0);
+	bl_upgrade = 0;
 
-	if (bl_upgrade)
-		led_color(64, 0, 16);
-	else
-		led_color(0, 16, 64);
+	// if (bl_upgrade)
+	// 	led_color(64, 0, 16);
+	// else
+	// 	led_color(0, 16, 64);
 
-	set_single_led(bl_upgrade);
+// 	set_single_led(bl_upgrade);
 	patch_descriptors(bl_upgrade);
 
 	/* Enable USB directly */
-	serial_no_init();
+	// serial_no_init();
 	usb_init(&dfu_stack_desc);
 	usb_dfu_init(dfu_zones, 4);
 	usb_msos20_init(NULL);
