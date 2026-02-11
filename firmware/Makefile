@@ -1,9 +1,10 @@
 BOARD ?= nexus
-CROSS ?= riscv-none-elf-
+CROSS ?= riscv64-unknown-elf-
 CC = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 ICEPROG = iceprog
 DFU_UTIL = dfu-util
+ENABLE_UART=1
 
 GITVER = $(shell git describe)
 TARGET_BASE=no2bootloader-$(BOARD)
