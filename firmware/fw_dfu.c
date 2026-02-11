@@ -135,10 +135,9 @@ usb_dfu_cb_flash_raw(void *data, unsigned len)
 
 
 static const struct usb_dfu_zone dfu_zones[] = {
-	{ 0x00080000, 0x000a0000 },     /* iCE40 bitstream */
-	{ 0x000a0000, 0x000c0000 },     /* RISC-V firmware */
-	{ 0x00040000, 0x00060000 },     /* Bootloader bitstream */
-	{ 0x00060000, 0x00080000 },     /* Bootloader firmware  */
+	{ 0x00000000, 0x00100000 },     /* bitstream 0 */
+	{ 0x00100000, 0x00200000 },     /* bitstream 1 */
+
 };
 
 
@@ -181,7 +180,7 @@ void main()
 	/* Enable USB directly */
 	serial_no_init();
 	usb_init(&dfu_stack_desc);
-	usb_dfu_init(dfu_zones, 4);
+	usb_dfu_init(dfu_zones, 2);
 	usb_msos20_init(NULL);
 	usb_connect();
 

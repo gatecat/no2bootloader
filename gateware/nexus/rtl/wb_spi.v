@@ -65,7 +65,7 @@ module wb_spi (
 				end else if (wb_addr == REG_TXDATA) begin
 					if (wb_we) begin
 						tx_data <= wb_wdata;
-						start_xfer <= 1'b0;
+						start_xfer <= 1'b1;
 					end
 				end else if (wb_addr == REG_RXDATA) begin
 					wb_rdata <= sr_i;
@@ -116,6 +116,8 @@ module wb_spi (
 				end else begin
 					div_ctr <= div_ctr + 1'b1;
 				end
+			end else if (state == STATE_DONE) begin
+				state <= STATE_IDLE;
 			end
 		end
 	end
